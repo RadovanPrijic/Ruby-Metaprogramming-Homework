@@ -11,6 +11,7 @@ class XlsxFile
         @file = Roo::Excelx.new("#@path", {:expand_merged_ranges => true})
         @table =  nil
         @row = nil
+        self.initialize_table
     end
 
     def initialize_table
@@ -63,8 +64,8 @@ class XlsxFile
 end
 
 xl = XlsxFile.new('./sample.xlsx')
-puts xl.file.info
-xl.initialize_table
+#puts xl.file.info
+#xl.initialize_table
 p xl.table
 
 #p xl.table[3][2]
