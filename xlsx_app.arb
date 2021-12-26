@@ -1,6 +1,7 @@
 # D:\sj_ruby_domacizadatak\sj_ruby_domacizadatak/xlsx_app.arb
 
 require 'roo'
+require 'matrix'
 
 class XlsxFile
     attr_accessor :path, :file, :table, :row
@@ -8,7 +9,7 @@ class XlsxFile
     def initialize(path)
         @path = path
         @file = Roo::Spreadsheet.open("#@path")
-        @file = Roo::Excelx.new("#@path", {:expand_merged_ranges => true})
+        @file = Roo::Excelx.new("#@path", {:expand_merged_ranges => false})
         @table =  nil
         @row = nil
         self.initialize_table
@@ -41,14 +42,13 @@ class XlsxFile
 
                     if flag == 1 then
                         row_to_remove = rowCnt
+                        @table.delete_at(row_to_remove)
                     end
 
                     rowCnt += 1
                     colCnt = 0
 
                 end
-
-                @table.delete_at(row_to_remove)
             end
         end
     end
@@ -61,16 +61,65 @@ class XlsxFile
         @table.each(&block)
     end
 
+    def add_method(c, m, &b)
+        c.class_eval {
+          define_method(m, &b)
+        }
+    end
+
 end
 
 xl = XlsxFile.new('./sample.xlsx')
 #puts xl.file.info
-#xl.initialize_table
-p xl.table
+#p xl.table
 
-#p xl.table[3][2]
-#p xl.row(2)[3]
-# xl.each do |cell|
-#     p cell
+add_method(XlsxFile, :greet) { "Hello, " + self }
+xl.greet # => "Hello, world"
+
+# rowCnt = 0
+# colCnt = 0
+# for row in xl.table do
+#     for column in row do
+#         if column.is_a? String then
+#             XlsxFile.class_eval %Q{
+#                 def #{column}
+#                     rowCnt = 0
+#                     colCnt = 0
+#                     for row in @table do
+#                         for column in row do
+#                             if colCnt == #{colCnt} then
+#                                 p @table[rowCnt][colCnt]
+#                             end
+#                             colCnt += 1
+#                         end
+#                         colCnt = 0
+#                         rowCnt += 1 
+#                     end
+#                 end
+
+#                 def #{column}_sum
+#                     rowCnt = 0
+#                     colCnt = 0
+#                     sum = 0
+#                     for row in @table do
+#                         for column in row do
+#                             if colCnt == #{colCnt} then
+#                                 if @table[rowCnt][colCnt].is_a? Integer then
+#                                     sum += @table[rowCnt][colCnt]
+#                                 end
+#                             end
+#                             colCnt += 1
+#                         end
+#                         colCnt = 0
+#                         rowCnt += 1 
+#                     end
+#                     p sum
+#                 end
+#             }
+#         end
+#         colCnt += 1
+#     end
+#     colCnt = 0
+#     rowCnt += 1
 # end
 
