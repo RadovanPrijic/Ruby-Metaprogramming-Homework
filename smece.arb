@@ -1,7 +1,6 @@
 # D:\sj_ruby_domacizadatak\sj_ruby_domacizadatak/xlsx_app.arb
 
 require 'roo'
-require 'matrix'
 
 class XlsxFile
     attr_accessor :path, :file, :table, :row

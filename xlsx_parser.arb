@@ -1,0 +1,136 @@
+# D:\sj_ruby_domacizadatak\sj_ruby_domacizadatak/xlsx_parser.arb
+
+require 'roo'
+
+class XlsxFile
+    attr_accessor :path, :file, :table, :cols, :row
+
+    def initialize(path)
+        @path = path
+        @file = Roo::Spreadsheet.open("#@path")
+        @file = Roo::Excelx.new("#@path", {:expand_merged_ranges => false})
+        @table =  nil
+        @cols = nil
+        @row = nil
+        self.initialize_table
+        self.initialize_cols
+    end
+
+    def initialize_table
+        @file.each_with_pagename do |name, sh|
+            if sh.first_row != nil then
+                @table =  Array.new(sh.last_row - sh.first_row + 1)
+                @row = Array.new(sh.last_row - sh.first_row + 1)
+
+                rowCnt = 0
+                flag = 0
+                row_to_remove = -1
+
+                sh.first_row.upto(sh.last_row) do |row|
+                    arr = []
+
+                    sh.first_column.upto(sh.last_column) do |column|
+                        arr << sh.cell(row, column)
+                        
+                        if (sh.formula(row, column).to_s.include? "SUBTOTAL") || (sh.formula(row, column).to_s.include? "TOTAL")
+                            flag = 1
+                        end
+                    end
+
+                    table[rowCnt] = *arr
+                    arr.clear
+
+                    if flag == 1 then
+                        row_to_remove = rowCnt
+                        @table.delete_at(row_to_remove)
+                    end
+
+                    rowCnt += 1
+                end
+            end
+        end
+    end
+
+    def initialize_cols
+        @file.each_with_pagename do |name, sh|
+            if sh.first_column != nil then
+                @cols = Hash[]
+
+                colCnt = 0
+                rowCnt = 0
+                flag = 0
+                col_name = ""
+
+                sh.first_column.upto(sh.last_column) do |column|
+                    arr = []
+
+                    sh.first_row.upto(sh.last_row) do |row|
+
+                        if rowCnt == 0 then
+                            col_name = sh.cell(row, column)
+                            cols[col_name] = nil
+                        else
+                            arr << sh.cell(row, column)
+                        end
+
+                        if (sh.formula(row, column).to_s.include? "SUBTOTAL") || (sh.formula(row, column).to_s.include? "TOTAL")
+                            flag = 1
+                        end
+
+                        rowCnt += 1
+                    end
+
+                    cols[col_name] = *arr
+                    arr.clear
+
+                    rowCnt = 0
+                    colCnt += 1
+                end
+
+                if flag == 1 then
+                    cols.each_value do |array|
+                        array.pop
+                    end
+                end
+            end
+        end
+    end    
+
+    def row(nr)
+        @row = table[nr]
+    end
+
+    def each(&block)
+        @table.each(&block)
+    end
+
+end
+
+def add_method(c, m, &b)
+    c.class_eval {
+      define_method(m, &b)
+    }
+end
+
+x = XlsxFile.new('./sample.xlsx')
+
+x.cols.each do |key, value|
+    add_method(XlsxFile, key) do
+        value
+    end
+end
+
+p x.header1[0]
+
+#p x.table
+
+#p x.cols
+
+#p x.table[0][0]
+
+#p x.row(0)[0]
+
+# x.each do |cell|
+#     p cell
+# end
+
