@@ -4,11 +4,17 @@ require_relative 'xlsx_parser'
 require_relative 'xls_parser'
 
 # x = XlsxFile.new('./sample.xlsx')
-# x = XlsFile.new('./sample2.xls')
+x = XlsFile.new('./sample2.xls')
 
 puts '-------------------------------'
 puts 'ISPIS TABELE'
 
+p x.t
+
+puts '-------------------------------'
+puts 'BRISANJE PRAZNIH REDOVA'
+
+x.remove_empty_rows
 p x.t
 
 puts '-------------------------------'
@@ -38,6 +44,7 @@ p x.table["header1"][0]
 puts '-------------------------------'
 puts 'DINAMICKA METODA TEST'
 
+x.add_column_methods
 p x.header1
 p x.header1[0]
 

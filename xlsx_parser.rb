@@ -101,6 +101,51 @@ class XlsxFile
         @t.each(&block)
     end
 
+    def remove_empty_rows
+        empty_cells = 0
+        row_cnt = 0
+        rows_to_remove = []
+
+        t.each do |row|
+            row.each do |cell|
+                if cell == nil then
+                    empty_cells += 1
+                end
+            end
+
+            if row.length == empty_cells then
+                rows_to_remove << row_cnt
+            end
+
+            empty_cells = 0
+            row_cnt += 1
+        end
+
+        rows_to_remove.each do |row_nr|
+
+            t.delete_at(row_nr)
+
+            table.each_value do |rows|
+                rows.delete_at(row_nr - 1)
+            end
+
+        end
+    end
+
+    def add_method(c, m, &b)
+        c.class_eval {
+          define_method(m, &b)
+        }
+    end
+    
+    def add_column_methods
+        self.table.each do |key, value|
+            add_method(XlsxFile, key) do
+                value
+            end
+        end    
+    end
+
 end
 
 class Column < Array
@@ -118,41 +163,3 @@ class Column < Array
     end
 
 end
-
-def add_method(c, m, &b)
-    c.class_eval {
-      define_method(m, &b)
-    }
-end
-
-x = XlsxFile.new('./sample.xlsx')
-
-x.table.each do |key, value|
-    add_method(XlsxFile, key) do
-        value
-    end
-end
-
-# p x.t
-
-# p x.t[0][1]
-
-# p x.row(0)[0]
-
-# x.each do |cell|
-#     p cell
-# end
-
-# p x.table["header1"]
-# p x.table["header1"][0]
-
-# p x.header1
-# p x.header1[0]
-# p x.header1.sum
-
-
-
-
-
-
-
