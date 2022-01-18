@@ -129,6 +129,18 @@ class XlsFile
         end    
     end
 
+    def +(secondFile)
+        if(self.t[0] == secondFile.t[0]) then
+            return self.t + secondFile.t[1..]
+        end
+    end
+
+    def -(secondFile)
+        if(self.t[0] == secondFile.t[0]) then
+            return self.t - secondFile.t[1..]
+        end
+    end
+
 end
 
 class Column < Array

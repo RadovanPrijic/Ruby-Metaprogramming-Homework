@@ -1,10 +1,12 @@
-# D:\sj_ruby_domacizadatak\sj_ruby_domacizadatak/main.rb
+# ruby D:\sj_ruby_domacizadatak\sj_ruby_domacizadatak/main.rb
 
 require_relative 'xlsx_parser'
 require_relative 'xls_parser'
 
-# x = XlsxFile.new('./sample.xlsx')
-x = XlsFile.new('./sample2.xls')
+# x = XlsxFile.new('./sample_1.xlsx')
+# y = XlsxFile.new('./sample_2.xlsx')
+# x = XlsFile.new('./sample_3.xls')
+# y = XlsFile.new('./sample_4.xls')
 
 puts '-------------------------------'
 puts 'ISPIS TABELE'
@@ -52,3 +54,13 @@ puts '-------------------------------'
 puts 'SUM TEST'
 
 p x.header1.sum
+
+puts '-------------------------------'
+puts 'SABIRANJE TABELA TEST'
+
+p x + y
+
+puts '-------------------------------'
+puts 'ODUZIMANJE TABELA TEST'
+
+p x - y
