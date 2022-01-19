@@ -5,13 +5,18 @@ require_relative 'xls_parser'
 
 # x = XlsxFile.new('./sample_1.xlsx')
 # y = XlsxFile.new('./sample_2.xlsx')
-# x = XlsFile.new('./sample_3.xls')
-# y = XlsFile.new('./sample_4.xls')
+x = XlsFile.new('./sample_3.xls')
+y = XlsFile.new('./sample_4.xls')
 
 puts '-------------------------------'
-puts 'ISPIS TABELE'
+puts 'ISPIS TABELE REDOVA'
 
 p x.t
+
+puts '-------------------------------'
+puts 'ISPIS TABELE KOLONA'
+
+p x.table
 
 puts '-------------------------------'
 puts 'BRISANJE PRAZNIH REDOVA'
