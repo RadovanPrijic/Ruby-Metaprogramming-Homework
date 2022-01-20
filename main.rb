@@ -3,10 +3,10 @@
 require_relative 'xlsx_parser'
 require_relative 'xls_parser'
 
-# x = XlsxFile.new('./sample_1.xlsx')
-# y = XlsxFile.new('./sample_2.xlsx')
-x = XlsFile.new('./sample_3.xls')
-y = XlsFile.new('./sample_4.xls')
+x = XlsxFile.new('./sample_1.xlsx')
+y = XlsxFile.new('./sample_2.xlsx')
+# x = XlsFile.new('./sample_3.xls')
+# y = XlsFile.new('./sample_4.xls')
 
 puts '-------------------------------'
 puts 'ISPIS TABELE REDOVA'
@@ -38,8 +38,8 @@ p x.row(0)[0]
 puts '-------------------------------'
 puts 'EACH TEST'
 
-x.each do |cell|
-    p cell
+x.each do |row|
+    p row
 end
 
 puts '-------------------------------'
